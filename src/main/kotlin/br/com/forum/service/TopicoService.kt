@@ -56,4 +56,12 @@ class TopicoService(
             )
         )
     }
+
+    fun deletar(id: Long) {
+        var topico = topicos.stream().filter(
+                { t -> t.id == id }
+            ).findFirst().get()
+
+        topicos = topicos.minus(topico)
+    }
 }
