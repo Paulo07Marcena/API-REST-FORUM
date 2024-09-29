@@ -1,5 +1,6 @@
 package br.com.forum.service
 
+import br.com.forum.dto.AtualizacaoTopicoForm
 import br.com.forum.dto.NovoTopicoForm
 import br.com.forum.dto.TopicoView
 import br.com.forum.mapper.TopicoFormMapper
@@ -35,5 +36,24 @@ class TopicoService(
         var topico = topicoFormMapper.map(dto)
         topico.id = topicos.size.toLong() + 1
         topicos = topicos.plus(topico)
+    }
+
+    fun atualizar(dto: AtualizacaoTopicoForm) {
+        var topico = topicos.stream().filter(
+                { t -> t.id == dto.id }
+            ).findFirst().get()
+
+        topicos = topicos.minus(topico).plus(
+            Topico(
+                id = dto.id,
+                titulo = dto.titulo,
+                curso = topico.curso,
+                autor = topico.autor,
+                mensagem = dto.mensagem,
+                dataCriacao = topico.dataCriacao,
+                status = topico.status,
+                respostas = topico.respostas
+            )
+        )
     }
 }
