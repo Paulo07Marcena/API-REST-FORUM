@@ -6,7 +6,9 @@ import br.com.forum.dto.TopicoView
 import br.com.forum.mapper.TopicoFormMapper
 import br.com.forum.mapper.TopicoViewMapper
 import br.com.forum.model.Topico
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.net.URI
 import java.util.stream.Collectors
 
 @Service
@@ -32,13 +34,14 @@ class TopicoService(
         return topicoViewMapper.map(topico)
     }
 
-    fun cadastrar(dto: NovoTopicoForm) {
+    fun cadastrar(dto: NovoTopicoForm): TopicoView {
         var topico = topicoFormMapper.map(dto)
         topico.id = topicos.size.toLong() + 1
         topicos = topicos.plus(topico)
+        return topicoViewMapper.map(topico)
     }
 
-    fun atualizar(dto: AtualizacaoTopicoForm) {
+    fun atualizar(dto: AtualizacaoTopicoForm): TopicoView {
         var topico = topicos.stream().filter(
                 { t -> t.id == dto.id }
             ).findFirst().get()
@@ -55,6 +58,8 @@ class TopicoService(
                 respostas = topico.respostas
             )
         )
+
+        return topicoViewMapper.map(topico)
     }
 
     fun deletar(id: Long) {
