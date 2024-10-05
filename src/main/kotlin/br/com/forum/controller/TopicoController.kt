@@ -42,6 +42,11 @@ class TopicoController(
         return service.buscarPorId(id);
     }
 
+    @GetMapping("/semResposta")
+    fun topicosSemResposta(): List<TopicoView> {
+        return service.topicosSemResposta();
+    }
+
     @GetMapping("/relatorio")
     fun relatorio(): List<TopicoPorCategoriaDto> {
         return service.relatorio();

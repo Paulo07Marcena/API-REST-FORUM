@@ -19,4 +19,7 @@ interface TopicoRepository: JpaRepository<Topico, Long>  {
             "GROUP BY curso.categoria "
     )
     fun relatorio(): List<TopicoPorCategoriaDto>
+
+    @Query("SELECT t FROM Topico t WHERE t.respostas IS EMPTY")
+    fun topicosSemResposta(): List<Topico>
 }

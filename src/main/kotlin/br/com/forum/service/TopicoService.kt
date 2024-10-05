@@ -73,4 +73,10 @@ class TopicoService(
     fun relatorio(): List<TopicoPorCategoriaDto> {
         return repository.relatorio();
     }
+
+    fun topicosSemResposta(): List<TopicoView> {
+        return repository.topicosSemResposta().stream()
+            .map { t -> topicoViewMapper.map(t) }
+            .collect(Collectors.toList())
+    }
 }
