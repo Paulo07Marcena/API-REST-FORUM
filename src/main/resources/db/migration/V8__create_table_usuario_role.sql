@@ -6,3 +6,5 @@ CREATE TABLE usuario_role(
     foreign key (usuario_id) references usuario(id),
     foreign key (role_id) references role(id)
 );
+
+INSERT INTO usuario_role (id, usuario_id, role_id) VALUES (1, 1, 1);
