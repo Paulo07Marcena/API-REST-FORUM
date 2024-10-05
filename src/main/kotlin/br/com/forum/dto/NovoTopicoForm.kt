@@ -1,5 +1,6 @@
 package br.com.forum.dto
 
+import br.com.forum.model.Usuario
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
@@ -13,5 +14,5 @@ data class NovoTopicoForm (
     @field:NotNull
     val idCurso: Long,
     @field:NotNull
-    val idAutor: Long
+    val idUsuario: Long
 )
