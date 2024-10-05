@@ -5,6 +5,7 @@ import br.com.forum.dto.NovoTopicoForm
 import br.com.forum.dto.TopicoView
 import br.com.forum.mapper.TopicoViewMapper
 import br.com.forum.service.TopicoService
+import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -38,6 +39,7 @@ class TopicoController(
     }
 
     @PostMapping
+    @Transactional
     fun cadastrar(
         @RequestBody @Valid dto: NovoTopicoForm,
         uriBuilder: UriComponentsBuilder
@@ -48,6 +50,7 @@ class TopicoController(
     }
 
     @PutMapping
+    @Transactional
     fun atualizar(
         @RequestBody @Valid dto: AtualizacaoTopicoForm,
         UriBuilder: UriComponentsBuilder
@@ -59,6 +62,7 @@ class TopicoController(
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletar(@PathVariable id: Long){
         service.deletar(id)
