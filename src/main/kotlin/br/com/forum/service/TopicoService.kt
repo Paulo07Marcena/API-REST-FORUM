@@ -9,6 +9,7 @@ import br.com.forum.mapper.TopicoFormMapper
 import br.com.forum.mapper.TopicoViewMapper
 import br.com.forum.model.Topico
 import br.com.forum.repository.TopicoRepository
+import jakarta.persistence.EntityManager
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -21,7 +22,8 @@ class TopicoService(
     private val repository: TopicoRepository,
     private val topicoViewMapper: TopicoViewMapper,
     private val topicoFormMapper: TopicoFormMapper,
-    private val notFoundMessage: String = "Tópico não encontrado"
+    private val notFoundMessage: String = "Tópico não encontrado",
+    private val em: EntityManager
 ) {
 
     fun listar(nomeCurso: String?,
