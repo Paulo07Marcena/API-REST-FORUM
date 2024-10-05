@@ -17,13 +17,13 @@ class SecurityConfiguration {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .csrf { it.disable() }
             .authorizeHttpRequests {
                 it.anyRequest().authenticated()
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
+            .formLogin().disable().httpBasic()
 
         return http.build()
     }
