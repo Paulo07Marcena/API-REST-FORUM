@@ -6,3 +6,4 @@ CREATE TABLE curso(
 );
 
 INSERT INTO curso (id, nome, categoria) VALUES (1, 'Java', 'Programação');
+INSERT INTO curso (id, nome, categoria) VALUES (2, 'HTML', 'FRONT END');

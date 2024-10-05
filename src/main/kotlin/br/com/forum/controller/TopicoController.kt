@@ -2,6 +2,7 @@ package br.com.forum.controller
 
 import br.com.forum.dto.AtualizacaoTopicoForm
 import br.com.forum.dto.NovoTopicoForm
+import br.com.forum.dto.TopicoPorCategoriaDto
 import br.com.forum.dto.TopicoView
 import br.com.forum.service.TopicoService
 import jakarta.transaction.Transactional
@@ -39,6 +40,11 @@ class TopicoController(
     @GetMapping("/{id}")
     fun buscarPorId(@PathVariable id: Long): TopicoView {
         return service.buscarPorId(id);
+    }
+
+    @GetMapping("/relatorio")
+    fun relatorio(): List<TopicoPorCategoriaDto> {
+        return service.relatorio();
     }
 
     @PostMapping
