@@ -11,3 +11,6 @@ spring:
         show_sql: true
         format_sql: true
   flyway.locations.filesystem: db/migration
+  h2:
+    console:
+      enabled: true
