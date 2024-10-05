@@ -6,6 +6,7 @@ import br.com.forum.dto.TopicoView
 import br.com.forum.service.TopicoService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -22,6 +23,7 @@ class TopicoController(
 ) {
 
     @GetMapping
+    @Cacheable("topicos")
     fun listar(
             @RequestParam(required = false) nomeCurso: String?,
             @PageableDefault(
