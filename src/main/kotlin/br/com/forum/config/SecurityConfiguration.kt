@@ -1,5 +1,6 @@
 package br.com.forum.config
 
+import br.com.forum.security.JWTLoginFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -28,7 +29,7 @@ class SecurityConfiguration(
                     .requestMatchers("/login").permitAll()
                     .anyRequest().authenticated()
             }
-            .addFilterBefore(JWTLoginFilter(authenticationManager = authenticationManagerBuilder, jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(JWTLoginFilter(authManager = authenticationManagerBuilder.build(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
