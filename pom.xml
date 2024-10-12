@@ -142,4 +142,22 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activeProperties>dev</activeProperties>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<activaProperties>prod</activaProperties>
+			</properties>
+		</profile>
+	</profiles>
+
 </project>
