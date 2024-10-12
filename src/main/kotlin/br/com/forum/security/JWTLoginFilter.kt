@@ -3,7 +3,6 @@ package br.com.forum.security
 import br.com.forum.config.JWTUtil
 import br.com.forum.model.Credentials
 import br.com.forum.model.UserDetail
-import br.com.forum.model.Usuario
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -30,8 +29,8 @@ class JWTLoginFilter(
         chain: FilterChain?,
         authResult: Authentication?
     ) {
-        val username = (authResult?.principal as UserDetail).getUsername()
-        val token = jwtUtil.generateToken(username)
+        val user = (authResult?.principal as UserDetail)
+        val token = jwtUtil.generateToken(user.username, user.authorities)
         response?.addHeader("Authorization", "Bearer $token")
     }
 

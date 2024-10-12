@@ -1,25 +1,31 @@
 package br.com.forum.config
 
+import br.com.forum.service.UsuarioService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
+import br.com.forum.config.Constants.Companion.pathJWTSecret
+import br.com.forum.config.Constants.Companion.tokenExperiedTime
+import br.com.forum.model.Role
 import java.util.*
 
 @Component
-class JWTUtil {
+class JWTUtil(
+    private val usuarioService: UsuarioService
+) {
 
-    private val expiration = 60000
+    @Value(pathJWTSecret)
+    private lateinit var secret: String
 
-    @Value("\${jwt.secret}")
-    private lateinit var secret : String
-
-    fun generateToken(username: String): String {
+    fun generateToken(username: String, authorities: List<Role>): String {
         return Jwts.builder()
             .setSubject(username)
-            .setExpiration(Date(System.currentTimeMillis() + expiration))
+            .claim("role", authorities)
+            .setExpiration(Date(System.currentTimeMillis() + tokenExperiedTime))
             .signWith(SignatureAlgorithm.HS512, secret.toByteArray())
             .compact()
     }
@@ -33,8 +39,9 @@ class JWTUtil {
         }
     }
 
-    fun getAuthentication(jwt: String?) : Authentication {
+    fun getAuthentication(jwt: String?): Authentication {
         val username = Jwts.parser().setSigningKey(secret.toByteArray()).parseClaimsJws(jwt).body.subject
-        return UsernamePasswordAuthenticationToken(username, null, null)
+        val roles = usuarioService.loadUserByUsername(username).authorities
+        return UsernamePasswordAuthenticationToken(username, null, roles)
     }
 }
