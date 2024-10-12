@@ -4,7 +4,6 @@ import br.com.forum.config.JWTUtil
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
@@ -28,7 +27,7 @@ class JWTAuthenticationFilter( private val jwtUtil: JWTUtil) : OncePerRequestFil
 
     fun getTokenDetail(token: String?) : String? {
         return token?.let { jwt ->
-            jwt.startsWith("Bearer ")
+            jwt.startsWith("Bearer   ")
             jwt.substring(7, jwt.length)
         }
     }

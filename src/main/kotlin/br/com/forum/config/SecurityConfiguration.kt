@@ -2,9 +2,11 @@ package br.com.forum.config
 
 import br.com.forum.security.JWTAuthenticationFilter
 import br.com.forum.security.JWTLoginFilter
+import br.com.forum.service.UsuarioService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -18,28 +20,31 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-    private val jwtUtil: JWTUtil,
-    private val authenticationManagerBuilder: AuthenticationManagerBuilder
+    private val usuarioService: UsuarioService,
+    private val jwtUtil: JWTUtil
 ) {
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
-            .authorizeHttpRequests { requests ->
-                requests
-                    //.requestMatchers(HttpMethod.GET, "/topicos").hasAuthority("LEITURA_ESCRITA")
-                    .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                    .anyRequest().authenticated()
-            }
-            .addFilterBefore(JWTLoginFilter(authManager = authenticationManagerBuilder.build(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
-            .addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), OncePerRequestFilter::class.java)
-            .sessionManagement {
-                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
-
+    fun filterChain(http: HttpSecurity, authManager: AuthenticationManager): SecurityFilterChain {
+        http.authorizeHttpRequests { it
+            .requestMatchers(HttpMethod.POST, "/login").permitAll()
+            .anyRequest().authenticated()
+        }
+            .csrf().disable()
+            .addFilterBefore(JWTLoginFilter(authManager = authManager, jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+    fun authenticationManager(http: HttpSecurity): AuthenticationManager {
+        val authBuilder = http.getSharedObject(AuthenticationManagerBuilder::class.java)
+        authBuilder.userDetailsService(usuarioService).passwordEncoder(bCryptPasswordEncoder())
+        return authBuilder.build()
+    }
+
+    @Bean
+    fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
 }

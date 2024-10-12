@@ -4,6 +4,8 @@ spring:
     url: jdbc:h2:mem:forum
     username: sa
     password:
+    jaxb:
+      enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
@@ -16,4 +18,4 @@ spring:
       enabled: true
 
 jwt:
-  secret: forum
+  secret: secret
