@@ -1,5 +1,6 @@
 package br.com.forum.config
 
+import br.com.forum.security.JWTAuthenticationFilter
 import br.com.forum.security.JWTLoginFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.filter.OncePerRequestFilter
 
 @Configuration
 @EnableWebSecurity
@@ -26,15 +28,14 @@ class SecurityConfiguration(
             .authorizeHttpRequests { requests ->
                 requests
                     //.requestMatchers(HttpMethod.GET, "/topicos").hasAuthority("LEITURA_ESCRITA")
-                    .requestMatchers("/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/login").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(JWTLoginFilter(authManager = authenticationManagerBuilder.build(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), OncePerRequestFilter::class.java)
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-            .formLogin().disable()
-            .httpBasic()
 
         return http.build()
     }
